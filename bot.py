@@ -14,9 +14,11 @@ bot = Bot(token=os.getenv('BOT_TOKEN'))
 
 dp = Dispatcher()
 
+
 @dp.message(Command('start'))
 async def bot_start(message: types.Message):
     await message.answer("Кофебот приветствует тебя!")
+
 
 async def main():
     await dp.start_polling(bot)
