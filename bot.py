@@ -1,26 +1,20 @@
-import os
 import asyncio
 import logging
 
-from aiogram import Bot, Dispatcher, types
+from aiogram import types
 from aiogram.filters.command import Command
-from dotenv import load_dotenv
 
-load_dotenv()
-
-logging.basicConfig(level=logging.INFO)
-
-bot = Bot(token=os.getenv('BOT_TOKEN'))
-
-dp = Dispatcher()
+from tg_bot.loader import bot, dp
 
 
 @dp.message(Command('start'))
 async def bot_start(message: types.Message):
+    """ Метод запуска бота. """
     await message.answer("Кофебот приветствует тебя!")
 
 
 async def main():
+    logging.info('Начало работы бота.')
     await dp.start_polling(bot)
 
 
