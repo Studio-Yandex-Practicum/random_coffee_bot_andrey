@@ -7,6 +7,7 @@ env.read_env()
 
 ADMIN_ID = env.str('ADMIN_ID')
 BOT_TOKEN = env.str('BOT_TOKEN')
-LOG_LEVEL = env.str('LOG_LEVEL')
+DEBUG = env.bool('DEBUG', False)
 
-logging.basicConfig(level=LOG_LEVEL)
+logging_level = logging.DEBUG if DEBUG else logging.INFO
+logging.basicConfig(level=logging_level)
