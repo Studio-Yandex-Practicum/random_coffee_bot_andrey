@@ -1,35 +1,26 @@
 import os
 
-import django
 from aiogram import Bot, Dispatcher
-from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.fsm.storage.redis import RedisStorage, Redis
+from aiogram.fsm.storage.redis import RedisStorage
+from apscheduler_di import ContextSchedulerDecorator
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.jobstores.redis import RedisJobStore
+from dotenv import load_dotenv
 
-from tg_bot.config import BOT_TOKEN, redis_host, redis_port, bot_logger
+load_dotenv()
 
-
-def setup_django():
-    os.environ.setdefault(
-        "DJANGO_SETTINGS_MODULE",
-        "admin_panel.django_settings.settings"
-    )
-    os.environ.update({"DJANGO_ALLOW_ASYNC_UNSAFE": "true"})
-    django.setup()
-
-
-def include_all_routers():
-    from tg_bot.handlers.default import default_router
-    dp.include_router(default_router)
-
-
-bot_logger.info("Logger initialized")
-setup_django()
-bot = Bot(BOT_TOKEN, parse_mode='HTML')
-
-if redis_host and redis_port:
-    storage = RedisStorage(Redis(host=redis_host, port=redis_port))
-else:
-    storage = MemoryStorage()
-
+bot = Bot(token=os.getenv('BOT_TOKEN'), parse_mode='HTML')
+storage = RedisStorage.from_url('redis://localhost:6379/0')
 dp = Dispatcher(storage=storage)
-include_all_routers()
+jobstores = {
+        'default': RedisJobStore(jobs_key='dispatched_trips_jobs',
+                                 run_times_key='dispatched_trips_running',
+                                 host='localhost',
+                                 db='2',
+                                 port=os.getenv('REDIS_PORT'))
+    }
+scheduler = ContextSchedulerDecorator(
+        AsyncIOScheduler(timezone='Europe/Moscow', jobstores=jobstores)
+    )
+scheduler.ctx.add_instance(bot, declared_class=Bot)
+scheduler.start()
