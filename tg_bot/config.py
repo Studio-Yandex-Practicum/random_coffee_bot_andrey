@@ -10,4 +10,3 @@ BOT_TOKEN = env.str('BOT_TOKEN')
 DEBUG = env.bool('DEBUG', False)
 
 logging.basicConfig(level=(logging.DEBUG if DEBUG else logging.INFO))
-print(logging.root.level)
