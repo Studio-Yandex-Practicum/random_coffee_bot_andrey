@@ -9,5 +9,5 @@ ADMIN_ID = env.str('ADMIN_ID')
 BOT_TOKEN = env.str('BOT_TOKEN')
 DEBUG = env.bool('DEBUG', False)
 
-logging_level = logging.DEBUG if DEBUG else logging.INFO
-logging.basicConfig(level=logging_level)
+logging.basicConfig(level=(logging.DEBUG if DEBUG else logging.INFO))
+print(logging.root.level)
