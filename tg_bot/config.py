@@ -5,7 +5,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-logging.basicConfig(level=os.getenv('DEBUG'))
+"""Logging levels"""
+DEBUG = os.getenv('DEBUG')
 
 """Tokens"""
 BOT_TOKEN = os.getenv('BOT_TOKEN')
+
+logging.basicConfig(level=logging.DEBUG if DEBUG else logging.INFO)
