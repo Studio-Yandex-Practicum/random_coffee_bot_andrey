@@ -7,5 +7,5 @@ default_router = Router()
 
 @default_router.message(Command('start'))
 async def bot_start(message: Message):
-    """ Ввод команды 'start' """
+    """Ввод команды /start"""
     await message.answer("Кофе-бот приветствует тебя!")
