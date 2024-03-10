@@ -1,7 +1,8 @@
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import RedisStorage, Redis
 
-from tg_bot.config import BOT_TOKEN
+from tg_bot.config import BOT_TOKEN, DEBUG
 
 
 def include_all_routers():
@@ -11,6 +12,11 @@ def include_all_routers():
 
 
 bot = Bot(token=BOT_TOKEN, parse_mode='HTML')
-storage = RedisStorage(Redis())
-dp = Dispatcher(storage=storage)
+
+if DEBUG:
+    storage = MemoryStorage()
+else:
+    storage = RedisStorage(Redis())
+
+dp = Dispatcher()
 include_all_routers()
