@@ -11,7 +11,7 @@ class AdminRegistration(StatesGroup):
     first_name = State()
 
 
-@admin_router.message(StateFilter(None), Command('admin'))
+@admin_router.message(Command('admin'))
 async def admin_message(message: types.Message, state: FSMContext):
     """Ввести фамилию"""
     await message.answer('Введите фамилию:')
