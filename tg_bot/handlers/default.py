@@ -51,7 +51,7 @@ async def get_email(message: Message):
     email = message.text.lower()
     pattern = rf'^[a-zA-Z0-9._]+' \
               rf'{re.escape(ALLOWED_DOMAIN)}\.' \
-              rf'(?:com|ru|org|net|info|biz)$'
+              rf'[a-zA-Z0-9._]'
     if not re.match(pattern, email):
         await message.answer(
             'Кажется, что указана не та почта, '
