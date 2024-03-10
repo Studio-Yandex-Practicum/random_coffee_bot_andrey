@@ -1,9 +1,12 @@
+import re
+
 from aiogram import Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from tg_bot.states.all_states import Register
+from tg_bot.config import ALLOWED_DOMAIN
 
 default_router = Router()
 
@@ -33,3 +36,26 @@ async def get_name(message: Message):
 
     full_name = ' '.join(part.capitalize() for part in name_parts)
     await message.answer(f'Вас зовут {full_name}')
+
+
+@default_router.message(Command('email'))
+async def command_email(message: Message, state: FSMContext):
+    """ Ввод команды /email """
+    await message.answer('Введите свой e-mail')
+    await state.set_state(Register.get_email)
+
+
+@default_router.message(Register.get_email)
+async def get_email(message: Message):
+    """ Получение почты """
+    email = message.text.lower()
+    pattern = rf'^[a-zA-Z0-9._]+' \
+              rf'{re.escape(ALLOWED_DOMAIN)}\.' \
+              rf'[a-zA-Z0-9._]'
+    if not re.match(pattern, email):
+        await message.answer(
+            'Кажется, что указана не та почта, '
+            'пожалуйста, для регистрации укажите именно рабочую почту'
+        )
+    else:
+        await message.answer(f'Ваша почта: {email}')
