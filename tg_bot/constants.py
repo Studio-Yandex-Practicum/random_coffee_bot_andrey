@@ -1,1 +1,0 @@
-ALLOWED_DOMAIN = '@groupeseb'
