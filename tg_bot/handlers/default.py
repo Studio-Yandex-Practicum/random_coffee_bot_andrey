@@ -1,6 +1,9 @@
 from aiogram import Router
 from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
+
+from tg_bot.states.all_states import StepsRegister
 
 default_router = Router()
 
@@ -12,12 +15,13 @@ async def bot_start(message: Message):
 
 
 @default_router.message(Command('name'))
-async def command_name(message: Message):
+async def command_name(message: Message, state: FSMContext):
     """Ввод команды /name"""
     await message.answer('Введите свои имя и фамилию')
+    await state.set_state(StepsRegister.GET_NAME)
 
 
-@default_router.message()
+@default_router.message(StepsRegister.GET_NAME)
 async def get_name(message: Message):
     """Получение имени"""
     name_parts = message.text.strip().split(' ')
