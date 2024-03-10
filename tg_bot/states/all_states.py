@@ -1,6 +1,6 @@
 from aiogram.fsm.state import State, StatesGroup
 
 
-class StepsRegister(StatesGroup):
-    GET_NAME = State()
-    GET_EMAIL = State()
+class Register(StatesGroup):
+    get_name = State()
+    get_email = State()
