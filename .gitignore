@@ -163,3 +163,8 @@ logs/BotLogger
 /tg_bot/logs/BotLogger/
 /postgres/
 /admin_panel/media/
+
+# VSC files
+.vscode
+.vscode/
+*.code-workspace
