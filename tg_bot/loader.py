@@ -12,5 +12,5 @@ def include_all_routers():
 
 bot = Bot(token=BOT_TOKEN, parse_mode='HTML')
 storage = RedisStorage(Redis())
-dp = Dispatcher(storage=storage)
+dp = Dispatcher()
 include_all_routers()
