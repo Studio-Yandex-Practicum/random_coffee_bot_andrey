@@ -25,7 +25,7 @@ async def command_name(message: Message, state: FSMContext):
 
 
 @default_router.message(Register.get_name)
-async def get_name(message: Message):
+async def get_name(message: Message, state: FSMContext):
     """Получение имени"""
     name_parts = message.text.strip().split(' ')
 
@@ -35,13 +35,8 @@ async def get_name(message: Message):
         return
 
     full_name = ' '.join(part.capitalize() for part in name_parts)
-    await message.answer(f'Вас зовут {full_name}')
-
-
-@default_router.message(Command('email'))
-async def command_email(message: Message, state: FSMContext):
-    """ Ввод команды /email """
-    await message.answer('Введите свой e-mail')
+    await message.answer(f'Вас зовут {full_name}.\n'
+                         'Введите свой e-mail')
     await state.set_state(Register.get_email)
 
 
