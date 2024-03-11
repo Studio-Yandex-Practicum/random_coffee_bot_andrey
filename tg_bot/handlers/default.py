@@ -54,7 +54,6 @@ async def get_email(message: Message, state: FSMContext):
         )
     else:
         context_data = await state.get_data()
-        print(context_data)
         full_name = context_data.get('full_name')
         await message.answer(
             f'Ваши данные\n'
