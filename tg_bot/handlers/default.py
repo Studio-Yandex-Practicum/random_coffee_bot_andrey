@@ -7,6 +7,7 @@ from aiogram.types import Message
 
 from tg_bot.states.all_states import Register
 from tg_bot.config import ALLOWED_DOMAIN
+from tg_bot.db.db_commands import create_tg_user
 
 default_router = Router()
 
@@ -55,8 +56,13 @@ async def get_email(message: Message, state: FSMContext):
     else:
         context_data = await state.get_data()
         full_name = context_data.get('full_name')
-        await message.answer(
-            f'Ваши данные\n'
-            f'Полное имя: {full_name}\n'
-            f'Рабочая почта: {email}')
+        await create_tg_user(
+            user=message.from_user,
+            email=email,
+            enter_full_name=full_name
+        )
+        # await message.answer(
+        #    f'Ваши данные\n'
+        #    f'Полное имя: {full_name}\n'
+        #    f'Рабочая почта: {email}')
         await state.clear()

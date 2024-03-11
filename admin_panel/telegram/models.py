@@ -3,9 +3,10 @@ from django.db import models
 
 class TgUser(models.Model):
     """Модель пользователя"""
-    id = models.BigIntegerField(unique=True)
+    id = models.BigIntegerField(
+        verbose_name='ID пользователя в Telegram', primary_key=True)
     email = models.EmailField('Почта', null=True, blank=True)
-    enter_full_name = models.CharField('Введенное пользователем имя',
+    enter_full_name = models.CharField('Введенное пользователем имя и фамилия',
                                        max_length=100,
                                        null=True,
                                        blank=True)
