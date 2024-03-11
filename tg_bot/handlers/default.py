@@ -35,13 +35,13 @@ async def get_name(message: Message, state: FSMContext):
         return
 
     full_name = ' '.join(part.capitalize() for part in name_parts)
-    await message.answer(f'Вас зовут {full_name}.\n'
-                         'Введите свой e-mail')
+    await message.answer('Теперь введите свой e-mail')
+    await state.update_data(full_name=full_name)
     await state.set_state(Register.get_email)
 
 
 @default_router.message(Register.get_email)
-async def get_email(message: Message):
+async def get_email(message: Message, state: FSMContext):
     """ Получение почты """
     email = message.text.lower()
     pattern = rf'^[a-zA-Z0-9._]+' \
@@ -53,4 +53,11 @@ async def get_email(message: Message):
             'пожалуйста, для регистрации укажите именно рабочую почту'
         )
     else:
-        await message.answer(f'Ваша почта: {email}')
+        context_data = await state.get_data()
+        print(context_data)
+        full_name = context_data.get('full_name')
+        await message.answer(
+            f'Ваши данные\n'
+            f'Полное имя: {full_name}\n'
+            f'Рабочая почта: {email}')
+        await state.clear()
