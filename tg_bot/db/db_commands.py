@@ -17,8 +17,9 @@ def create_tg_user(user: User, email: str, enter_full_name: str):
 
 
 @sync_to_async
-def get_tg_user(user: User):
-    tg_user = TgUser.objects.get(
-        id=user.id
-    )
+def get_tg_user(user_id):
+    try:
+        tg_user = TgUser.objects.get(id=user_id)
+    except TgUser.DoesNotExist:
+        return None
     return tg_user
