@@ -5,8 +5,9 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from tg_bot.states.all_states import Register
 from tg_bot.config import ALLOWED_DOMAIN
+from tg_bot.misc.utils import get_entered_name
+from tg_bot.states.all_states import Register
 
 default_router = Router()
 
@@ -26,15 +27,14 @@ async def command_name(message: Message, state: FSMContext):
 
 @default_router.message(Register.get_name)
 async def get_name(message: Message, state: FSMContext):
-    """Получение имени"""
-    name_parts = message.text.strip().split(' ')
+    """Получение имени и фамилии"""
+    full_name = await get_entered_name(message.text)
 
-    if len(name_parts) != 2 or not all(part.isalpha() for part in name_parts):
+    if not full_name:
         await message.answer('Введите, свои имя и фамилию, состоящие только '
                              'из букв и разделенные пробелом.')
         return
 
-    full_name = ' '.join(part.capitalize() for part in name_parts)
     await message.answer('Теперь введите свой e-mail')
     await state.update_data(full_name=full_name)
     await state.set_state(Register.get_email)
