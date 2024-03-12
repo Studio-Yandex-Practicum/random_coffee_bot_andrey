@@ -17,12 +17,6 @@ default_router.message.middleware(BlockingMiddleware())
 default_router.callback_query.middleware(BlockingMiddleware())
 
 
-# @default_router.message(Command('start'))
-# async def bot_start(message: Message):
-#    """Ввод команды /start"""
-#    await message.answer("Кофе-бот приветствует тебя!")
-
-
 @default_router.message(Command('name'))
 async def command_name(message: Message, state: FSMContext):
     """Ввод команды /name"""
@@ -66,5 +60,5 @@ async def get_email(message: Message, state: FSMContext):
             enter_full_name=full_name
         )
         await message.answer(
-            f'Пользователь {full_name} зарегистрирован.')
+            'Пользователь зарегистрирован.')
         await state.clear()

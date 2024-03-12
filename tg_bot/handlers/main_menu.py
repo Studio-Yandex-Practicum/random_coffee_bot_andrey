@@ -1,14 +1,9 @@
 from aiogram import Router
 from aiogram.filters import Command
-# from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-# from tg_bot.config import ALLOWED_DOMAIN
-# from tg_bot.db.db_commands import create_tg_user
 from tg_bot.middlewares.blocking import BlockingMiddleware
-# from tg_bot.misc.utils import get_entered_name
-# from tg_bot.states.all_states import Register
-from tg_bot.keyboards.reply import reply_keyboard
+from tg_bot.keyboards.reply import kb_main_menu
 
 
 main_router = Router()
@@ -19,5 +14,14 @@ main_router.callback_query.middleware(BlockingMiddleware())
 @main_router.message(Command('start'))
 async def main_menu(message: Message):
     """Ввод команды /start"""
-    await message.answer('Кофе-бот приветствует тебя!',
-                         reply_markup=reply_keyboard)
+    await message.answer(
+        'Что умеет этот бот?'
+        '\n☕️Мы продолжаем нашу прекрасную традицию знакомиться за чашечкой '
+        'горячего кофе или чая.'
+        '\n🗓️ С кем ты разделишь капучино - решает случай. Каждый понедельник '
+        'в этом боте будет происходить рассылка с именем коллеги, '
+        'с кем вам нужно организовать встречу.'
+        '\n🔁Участники выбираются случайным образом, поэтому вы сможете выпить '
+        'кофе с теми, с кем еще не пересекались по работе.'
+        '\nДобро пожаловать🥰',
+        reply_markup=kb_main_menu())
