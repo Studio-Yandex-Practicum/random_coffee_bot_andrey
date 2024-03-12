@@ -6,10 +6,13 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from tg_bot.config import ALLOWED_DOMAIN
+from tg_bot.middlewares.blocking import BlockingMiddleware
 from tg_bot.misc.utils import get_entered_name
 from tg_bot.states.all_states import Register
 
 default_router = Router()
+default_router.message.middleware(BlockingMiddleware())
+default_router.callback_query.middleware(BlockingMiddleware())
 
 
 @default_router.message(Command('start'))
