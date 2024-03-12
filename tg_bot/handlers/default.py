@@ -61,8 +61,6 @@ async def get_email(message: Message, state: FSMContext):
             email=email,
             enter_full_name=full_name
         )
-        # await message.answer(
-        #    f'Ваши данные\n'
-        #    f'Полное имя: {full_name}\n'
-        #    f'Рабочая почта: {email}')
+        await message.answer(
+            f'Пользователь {full_name} зарегистрирован.')
         await state.clear()

@@ -13,5 +13,4 @@ def create_tg_user(user: User, email: str, enter_full_name: str):
         username=user.username,
         full_name=user.full_name
     )
-    tg_user.save()
     return tg_user

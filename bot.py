@@ -1,10 +1,3 @@
-import os
-import django
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE',
-                      'admin_panel.django_settings.settings')
-django.setup()
-
 import asyncio
 import logging
 
@@ -21,6 +14,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-# Настройки джанго в бот или в лоадер
-# как установить настройки джанго в aiogram
