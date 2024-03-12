@@ -5,11 +5,11 @@ from aiogram.types import Message
 
 from tg_bot.misc.utils import get_entered_name
 from tg_bot.states.all_states import Admin
-from tg_bot.middlewares.admin import CheckRulesAdminMiddleware
+from tg_bot.middlewares.admin import AdminMiddleware
 
 admin_router = Router()
-admin_router.message.middleware(CheckRulesAdminMiddleware())
-admin_router.callback_query.middleware(CheckRulesAdminMiddleware())
+admin_router.message.middleware(AdminMiddleware())
+admin_router.callback_query.middleware(AdminMiddleware())
 
 
 @admin_router.message(Command('admin'))

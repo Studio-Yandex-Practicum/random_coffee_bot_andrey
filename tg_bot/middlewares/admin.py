@@ -1,7 +1,7 @@
 from aiogram import BaseMiddleware
 
 
-class CheckRulesAdminMiddleware(BaseMiddleware):
+class AdminMiddleware(BaseMiddleware):
     """ Проверка админ-прав пользователя """
     async def __call__(self, handler, event, data):
         if event.from_user.is_bot:
