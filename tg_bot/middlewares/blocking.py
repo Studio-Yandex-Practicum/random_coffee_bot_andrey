@@ -1,5 +1,4 @@
 from aiogram import BaseMiddleware
-from aiogram.types import CallbackQuery, Message
 
 
 class BlockingMiddleware(BaseMiddleware):
@@ -13,10 +12,10 @@ class BlockingMiddleware(BaseMiddleware):
         blocked_id = 455343976
 
         if user_id == blocked_id:
-            if isinstance(event, Message):
-                await event.answer('Вы заблокированы.')
-            elif isinstance(event, CallbackQuery):
-                await event.message.answer('Вы заблокированы.')
+            await event.answer(
+                    text='Вы заблокированы.',
+                    show_alert=True
+                )
             return
 
         await handler(event, data)
