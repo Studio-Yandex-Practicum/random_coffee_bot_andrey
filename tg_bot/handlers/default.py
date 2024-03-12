@@ -17,10 +17,10 @@ default_router.message.middleware(BlockingMiddleware())
 default_router.callback_query.middleware(BlockingMiddleware())
 
 
-@default_router.message(Command('start'))
-async def bot_start(message: Message):
-    """Ввод команды /start"""
-    await message.answer("Кофе-бот приветствует тебя!")
+# @default_router.message(Command('start'))
+# async def bot_start(message: Message):
+#    """Ввод команды /start"""
+#    await message.answer("Кофе-бот приветствует тебя!")
 
 
 @default_router.message(Command('name'))
