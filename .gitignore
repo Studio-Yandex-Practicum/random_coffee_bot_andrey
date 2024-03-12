@@ -163,6 +163,7 @@ logs/BotLogger
 /tg_bot/logs/BotLogger/
 /postgres/
 /admin_panel/media/
+/admin_panel/telegram/migrations/
 
 # VSC files
 .vscode

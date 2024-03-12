@@ -1,11 +1,15 @@
-from aiogram import types, Router
+from aiogram import Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
+from tg_bot.misc.utils import get_entered_name
 from tg_bot.states.all_states import Admin
+from tg_bot.middlewares.admin import AdminMiddleware
 
 admin_router = Router()
+admin_router.message.middleware(AdminMiddleware())
+admin_router.callback_query.middleware(AdminMiddleware())
 
 
 @admin_router.message(Command('admin'))
@@ -18,12 +22,11 @@ async def admin_message(message: Message, state: FSMContext):
 @admin_router.message(Admin.get_name)
 async def get_name(message: Message):
     """Получение имени и фамилии"""
-    name_parts = message.text.strip().split(' ')
+    full_name = await get_entered_name(message.text)
 
-    if len(name_parts) != 2 or not all(part.isalpha() for part in name_parts):
+    if not full_name:
         await message.answer('Введите, свои имя и фамилию, состоящие только '
                              'из букв и разделенные пробелом.')
         return
 
-    full_name = ' '.join(part.capitalize() for part in name_parts)
     await message.answer(f'{full_name}')
