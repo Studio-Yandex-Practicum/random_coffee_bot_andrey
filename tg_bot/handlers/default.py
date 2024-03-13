@@ -5,10 +5,16 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from tg_bot.states.all_states import Register
 from tg_bot.config import ALLOWED_DOMAIN
+from tg_bot.db.db_commands import create_tg_user
+from tg_bot.middlewares.blocking import BlockingMiddleware
+from tg_bot.misc.utils import get_entered_name
+from tg_bot.states.all_states import Register
+
 
 default_router = Router()
+default_router.message.middleware(BlockingMiddleware())
+default_router.callback_query.middleware(BlockingMiddleware())
 
 
 @default_router.message(Command('start'))
@@ -25,28 +31,22 @@ async def command_name(message: Message, state: FSMContext):
 
 
 @default_router.message(Register.get_name)
-async def get_name(message: Message):
-    """Получение имени"""
-    name_parts = message.text.strip().split(' ')
+async def get_name(message: Message, state: FSMContext):
+    """Получение имени и фамилии"""
+    full_name = await get_entered_name(message.text)
 
-    if len(name_parts) != 2 or not all(part.isalpha() for part in name_parts):
+    if not full_name:
         await message.answer('Введите, свои имя и фамилию, состоящие только '
                              'из букв и разделенные пробелом.')
         return
 
-    full_name = ' '.join(part.capitalize() for part in name_parts)
-    await message.answer(f'Вас зовут {full_name}')
-
-
-@default_router.message(Command('email'))
-async def command_email(message: Message, state: FSMContext):
-    """ Ввод команды /email """
-    await message.answer('Введите свой e-mail')
+    await message.answer('Теперь введите свой e-mail')
+    await state.update_data(full_name=full_name)
     await state.set_state(Register.get_email)
 
 
 @default_router.message(Register.get_email)
-async def get_email(message: Message):
+async def get_email(message: Message, state: FSMContext):
     """ Получение почты """
     email = message.text.lower()
     pattern = rf'^[a-zA-Z0-9._]+' \
@@ -58,4 +58,13 @@ async def get_email(message: Message):
             'пожалуйста, для регистрации укажите именно рабочую почту'
         )
     else:
-        await message.answer(f'Ваша почта: {email}')
+        context_data = await state.get_data()
+        full_name = context_data.get('full_name')
+        await create_tg_user(
+            user=message.from_user,
+            email=email,
+            enter_full_name=full_name
+        )
+        await message.answer(
+            f'Пользователь {full_name} зарегистрирован.')
+        await state.clear()

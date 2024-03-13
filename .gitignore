@@ -163,8 +163,12 @@ logs/BotLogger
 /tg_bot/logs/BotLogger/
 /postgres/
 /admin_panel/media/
+/admin_panel/telegram/migrations/
 
 # VSC files
 .vscode
 .vscode/
 *.code-workspace
+
+# Файлы миграций django
+admin_panel/telegram/migrations/
