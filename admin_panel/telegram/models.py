@@ -25,6 +25,8 @@ class TgUser(models.Model):
         verbose_name='Пользователь разблокирован', default=True)
     is_admin = models.BooleanField(
         verbose_name='Права администратора', default=False)
+    is_active = models.BooleanField(
+        verbose_name='Пользователь активен', default=True)
 
     class Meta:
         verbose_name = 'Пользователь'
