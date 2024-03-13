@@ -6,5 +6,5 @@ from tg_bot.handlers.main_menu import main_menu_router
 all_routers = (
     default_router,
     admin_router,
-    main_menu_router
+    main_menu_router,
 )
