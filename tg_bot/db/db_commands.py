@@ -14,3 +14,8 @@ def create_tg_user(user: User, email: str, enter_full_name: str):
         full_name=user.full_name
     )
     return tg_user
+
+
+@sync_to_async
+def get_tg_user_(user_id):
+    return TgUser.objects.filter(id=user_id).first()

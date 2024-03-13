@@ -1,22 +1,3 @@
-import re
-
-from aiogram import Router
-from aiogram.filters import Command
-from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
-
-from tg_bot.config import ALLOWED_DOMAIN
-from tg_bot.db.db_commands import create_tg_user
-from tg_bot.middlewares.blocking import BlockingMiddleware
-from tg_bot.misc.utils import get_entered_name
-from tg_bot.states.all_states import Register
-
-
-default_router = Router()
-default_router.message.middleware(BlockingMiddleware())
-default_router.callback_query.middleware(BlockingMiddleware())
-
-
 @default_router.message(Command('name'))
 async def command_name(message: Message, state: FSMContext):
     """Ввод команды /name"""
@@ -60,5 +41,23 @@ async def get_email(message: Message, state: FSMContext):
             enter_full_name=full_name
         )
         await message.answer(
-            'Вы зарегистрированы.')
-        await state.clear()
+            'Пользователь зарегистрирован.')
+        # await state.clear()
+
+
+@default_router.message(Command('user'))
+async def get_user_id(message: Message, state: FSMContext):
+    await message.answer("Введите ID пользователя:")
+    await state.set_state(Register.get_user)
+
+
+@default_router.message(Register.get_user)
+async def get_user_data(message: Message, state: FSMContext):
+    user_id = int(message.text)
+    user = await get_tg_user(user_id)
+    if user:
+        await message.answer(
+            f"Информация о пользователе:\nID: {user.id}\nИмя: {user.enter_full_name}\nEmail: {user.email}")
+    else:
+        await message.answer("Пользователь с таким ID не найден.")
+    await state.clear()
