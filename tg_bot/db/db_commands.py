@@ -19,3 +19,8 @@ def create_tg_user(user: User, email: str, enter_full_name: str):
 @sync_to_async
 def get_tg_user(user_id):
     return TgUser.objects.filter(id=user_id).first()
+
+
+@sync_to_async
+def search_tg_user(email: str):
+    return TgUser.objects.filter(email=email).first()
