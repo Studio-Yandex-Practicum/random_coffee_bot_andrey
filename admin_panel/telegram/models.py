@@ -5,12 +5,10 @@ class TgUser(models.Model):
     """Модель пользователя"""
     id = models.BigIntegerField(
         verbose_name='ID пользователя в Telegram', primary_key=True)
-    email = models.EmailField(verbose_name='Почта', null=True, blank=True)
+    email = models.EmailField(verbose_name='Почта', unique=True)
     enter_full_name = models.CharField(
         verbose_name='Введенное пользователем имя и фамилия',
         max_length=100,
-        null=True,
-        blank=True
     )
     username = models.CharField(
         verbose_name='Имя пользователя',
