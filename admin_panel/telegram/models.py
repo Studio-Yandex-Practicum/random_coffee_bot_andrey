@@ -32,3 +32,31 @@ class TgUser(models.Model):
 
     def __str__(self):
         return f'{self.id} {self.enter_full_name}'
+
+
+class Meeting(models.Model):
+    """Модель встречи"""
+    user = models.ForeignKey(
+        TgUser,
+        on_delete=models.CASCADE,
+        related_name='user_meetings',
+        verbose_name='Пользователь',
+    )
+    partner = models.ForeignKey(
+        TgUser,
+        on_delete=models.CASCADE,
+        related_name='partner_meetings',
+        verbose_name='Партнёр',
+    )
+    date = models.DateField(verbose_name='Дата встречи')
+    status = models.BooleanField(
+        default=False,
+        verbose_name='Статус встречи',
+    )
+
+    class Meta:
+        verbose_name = 'Встреча'
+        verbose_name_plural = 'Встречи'
+
+    def __str__(self):
+        return f"Встреча {self.user} с {self.partner}, дата - {self.date}"
