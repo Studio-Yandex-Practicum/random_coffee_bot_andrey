@@ -59,4 +59,4 @@ class Meeting(models.Model):
         verbose_name_plural = 'Встречи'
 
     def __str__(self):
-        return f"Встреча {self.user} с {self.partner}, дата - {self.date}"
+        return f'Встреча {self.user} с {self.partner}, дата - {self.date}'
