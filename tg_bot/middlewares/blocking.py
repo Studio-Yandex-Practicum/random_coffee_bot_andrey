@@ -1,8 +1,6 @@
-from asgiref.sync import sync_to_async
-
 from aiogram import BaseMiddleware
 
-from admin_panel.telegram.models import TgUser
+from tg_bot.db.db_commands import get_tg_user
 
 
 class BlockingMiddleware(BaseMiddleware):
@@ -11,14 +9,9 @@ class BlockingMiddleware(BaseMiddleware):
         if event.from_user.is_bot:
             return
 
-        user_blocked = await sync_to_async(
-            TgUser.objects.filter(
-                id=event.from_user.id,
-                is_unblocked=False,
-            ).exists
-        )()
+        user = await get_tg_user(event.from_user.id)
 
-        if user_blocked:
+        if user is not None and not user.is_unblocked:
             await event.answer(
                     text='Вы заблокированы.',
                     show_alert=True
