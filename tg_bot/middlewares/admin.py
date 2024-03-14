@@ -1,4 +1,8 @@
+from asgiref.sync import sync_to_async
+
 from aiogram import BaseMiddleware
+
+from admin_panel.telegram.models import TgUser
 
 
 class AdminMiddleware(BaseMiddleware):
@@ -6,10 +10,14 @@ class AdminMiddleware(BaseMiddleware):
     async def __call__(self, handler, event, data):
         if event.from_user.is_bot:
             return
-        user_id = event.from_user.id
-        admin_id = 457161780  # Временная заглушка(мой ID типа я админ)
+        user_admin = await sync_to_async(
+            TgUser.objects.filter(
+                id=event.from_user.id,
+                is_admin=True,
+            ).exists
+        )()
 
-        if user_id != admin_id:
+        if not user_admin:
             await event.answer(
                 text='Вы не администратор.',
                 show_alert=True
