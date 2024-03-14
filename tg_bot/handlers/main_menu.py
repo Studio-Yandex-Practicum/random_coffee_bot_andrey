@@ -1,5 +1,4 @@
 from aiogram import Router, F
-from aiogram.filters import Command
 from aiogram.types import Message
 
 from tg_bot.middlewares.blocking import BlockingMiddleware
@@ -34,9 +33,8 @@ ABOUT_TEXT = '''
 ''' # noqa
 
 
-@main_menu_router.message(Command('start'))
 async def main_menu(message: Message):
-    """Ввод команды /start"""
+    """Главное меню"""
     await message.answer(
         GREETING_TEXT,
         reply_markup=kb_main_menu())
