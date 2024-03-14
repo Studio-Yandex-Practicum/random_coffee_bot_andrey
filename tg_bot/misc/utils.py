@@ -1,8 +1,6 @@
-import logging
 from asyncio import sleep
 from typing import Optional
 
-from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import Message
 
 
@@ -21,6 +19,5 @@ async def delete_message(message: Message, sleep_time: int = 600) -> None:
     await sleep(sleep_time)
     try:
         await message.delete()
-    except TelegramBadRequest as e:
-        logging.error(f'Ошибка при удалении сообщения {message.message_id}:\n'
-                      f'{e}')
+    except Exception:
+        return
