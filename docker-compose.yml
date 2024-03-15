@@ -1,0 +1,25 @@
+version: '3'
+
+volumes:
+  coffeebot_postgres_data:
+  static:
+
+services:
+  db:
+    image: postgres:13.10
+    env_file: .env
+    volumes:
+      - coffeebot_postgres_data:/var/lib/postgresql/data
+  coffebot:
+    build: ./
+    env_file: .env
+    volumes:
+      - static:/coffebot_static
+    depends_on:
+      - db
+  gateway:
+    build: ./gateway/
+    volumes:
+      - static:/staticfiles/
+    ports:
+      - 8000:80
