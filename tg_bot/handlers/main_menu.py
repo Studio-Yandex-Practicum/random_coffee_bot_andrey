@@ -1,6 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import Message
 
+from tg_bot.db.db_commands import get_tg_user
 from tg_bot.middlewares.blocking import BlockingMiddleware
 from tg_bot.keyboards.reply import kb_main_menu
 
@@ -35,9 +36,18 @@ ABOUT_TEXT = '''
 
 async def main_menu(message: Message):
     """Главное меню"""
-    await message.answer(
-        GREETING_TEXT,
-        reply_markup=kb_main_menu())
+    user = await get_tg_user(message.from_user.id)
+    bot_unblocked = user.bot_unblocked
+    if bot_unblocked:
+        await message.answer(
+            GREETING_TEXT,
+            reply_markup=kb_main_menu(include_resume_button=True)
+        )
+    else:
+        await message.answer(
+            GREETING_TEXT,
+            reply_markup=kb_main_menu(include_resume_button=False)
+        )
 
 
 @main_menu_router.message(F.text == 'О проекте')
