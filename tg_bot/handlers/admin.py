@@ -32,7 +32,7 @@ async def admin_message(message: Message, state: FSMContext):
     """Предложение ввести почту."""
     msg = await message.answer('Введите электронный адрес пользователя:')
     await state.set_state(Admin.get_email)
-    await asyncio.create_task(delete_message(msg))
+    await delete_message(msg)
 
 
 @admin_router.message(Admin.get_email)
@@ -54,13 +54,13 @@ async def get_name(message: Message):
         msg = await message.answer(
             text=about_user, reply_markup=get_callback_btns(
                 btns={f'{button}': f'blocked_{tg_model.id}'}))
-        await asyncio.create_task(delete_message(msg))
+        await delete_message(msg)
 
     else:
         msg = await message.answer(
             text=USER_NOT_EXIST, reply_markup=get_callback_btns(
                 btns={'⛔ Отмена': 'cancel'}))
-        await asyncio.create_task(delete_message(msg))
+        await delete_message(msg)
 
 
 @admin_router.callback_query(F.data.startswith('cancel'))
@@ -69,7 +69,7 @@ async def stop(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
     msg = await callback.message.answer("Вы отменили текущее действие")
     await state.clear()
-    await asyncio.create_task(delete_message(msg))
+    await delete_message(msg)
 
 
 @admin_router.callback_query(F.data.startswith('blocked_'))
@@ -99,4 +99,4 @@ async def unblock(callback: CallbackQuery, state: FSMContext):
         f'Пользователь {tg_model.enter_full_name} {msg}'
     )
     await state.clear()
-    await asyncio.create_task(delete_message(msg))
+    await delete_message(msg)
