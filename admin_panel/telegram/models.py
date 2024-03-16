@@ -49,10 +49,6 @@ class Meeting(models.Model):
         verbose_name='Партнёр',
     )
     date = models.DateField(verbose_name='Дата встречи')
-    status = models.BooleanField(
-        default=False,
-        verbose_name='Статус встречи',
-    )
 
     class Meta:
         verbose_name = 'Встреча'
