@@ -8,8 +8,7 @@ from aiogram.types import Message, CallbackQuery
 from tg_bot.db.db_commands import (
     search_tg_user,
     user_id_block_unblock,
-    get_tg_user,
-    search_block_tg_user
+    get_tg_user
 )
 from tg_bot.keyboards.inline import get_callback_btns
 from tg_bot.middlewares.admin import AdminMiddleware
