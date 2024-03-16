@@ -26,11 +26,6 @@ def search_tg_user(email: str):
     return TgUser.objects.filter(email=email).first()
 
 
-def search_block_tg_user(user_id):
-    user_model = TgUser.objects.filter(id=user_id).first()
-    return user_model.is_unblocked
-
-
 @sync_to_async
 def user_id_block_unblock(user_id):
     user_model = TgUser.objects.filter(id=user_id).first()

@@ -78,7 +78,7 @@ async def unblock(callback: CallbackQuery, state: FSMContext):
     user_id = int(callback.data.split('_')[-1])
     tg_model = await get_tg_user(user_id)
     button = '✅ Разблокировать' if tg_model.is_unblocked else '🛑 Заблокировать'
-    msg = 'заблокирован' if search_block_tg_user(user_id) else 'разблокирован'
+    msg = 'заблокирован' if tg_model.is_unblocked else 'разблокирован'
     await user_id_block_unblock(user_id)
     await callback.answer()
     await callback.message.edit_text(
