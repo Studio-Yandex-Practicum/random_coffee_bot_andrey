@@ -169,6 +169,3 @@ logs/BotLogger
 .vscode
 .vscode/
 *.code-workspace
-
-# Файлы миграций django
-admin_panel/telegram/migrations/

@@ -62,8 +62,8 @@ ABOUT_TEXT = '''
 async def main_menu(message: Message):
     """Главное меню"""
     user = await get_tg_user(message.from_user.id)
-    bot_unblocked = user.bot_unblocked
-    if bot_unblocked:
+    user_is_active = user.is_active
+    if user_is_active:
         await message.answer(
             GREETING_TEXT,
             reply_markup=kb_main_menu(include_resume_button=True)
