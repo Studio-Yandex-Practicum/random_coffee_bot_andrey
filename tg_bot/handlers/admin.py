@@ -79,21 +79,22 @@ async def unblock(callback: CallbackQuery, state: FSMContext):
     button = '✅ Разблокировать' if tg_model.is_unblocked else '🛑 Заблокировать'
     msg = 'заблокирован' if tg_model.is_unblocked else 'разблокирован'
     await user_id_block_unblock(user_id)
-    await callback.answer()
-    await callback.message.edit_text(
-        text=(
-            '💼<b>ДАННЫЕ ПОЛЬЗОВАТЕЛЯ:</b>💼'
-            '\n__________________________________'
-            f'\n🔉<b>имя и фамилия:</b> {tg_model.enter_full_name}'
-            f'\n🔉<b>никнейм:</b> {tg_model.username}'
-            f'\n🔉<b>полное имя в тг:</b> {tg_model.full_name}'
-        ),
-        reply_markup=get_callback_btns(
-            btns={
-                f'{button}': f'blocked_{tg_model.id}'
-            }
-        )
-    )
+    # todo функция удаления сообщения
+    # await callback.answer()
+    # await callback.message.edit_text(
+    #     text=(
+    #         '💼<b>ДАННЫЕ ПОЛЬЗОВАТЕЛЯ:</b>💼'
+    #         '\n__________________________________'
+    #         f'\n🔉<b>имя и фамилия:</b> {tg_model.enter_full_name}'
+    #         f'\n🔉<b>никнейм:</b> {tg_model.username}'
+    #         f'\n🔉<b>полное имя в тг:</b> {tg_model.full_name}'
+    #     ),
+    #     reply_markup=get_callback_btns(
+    #         btns={
+    #             f'{button}': f'blocked_{tg_model.id}'
+    #         }
+    #     )
+    # )
     msg = await callback.message.answer(
         f'Пользователь {tg_model.enter_full_name} {msg}'
     )
