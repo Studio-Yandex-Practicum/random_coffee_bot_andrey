@@ -23,3 +23,9 @@ services:
       - static:/staticfiles/
     ports:
       - 8000:80
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    depends_on:
+      - backend

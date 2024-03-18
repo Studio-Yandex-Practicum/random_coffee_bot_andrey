@@ -3,4 +3,4 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt --no-cache-dir
 COPY . .
-CMD ["python", "django_app.py", "runserver", "0:8000"]
+CMD ["bash", "-c", "python django_app.py runserver 0:8000 & python bot.py"]
