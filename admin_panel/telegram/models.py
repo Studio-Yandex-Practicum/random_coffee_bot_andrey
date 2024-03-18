@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 
 
@@ -48,7 +50,10 @@ class Meeting(models.Model):
         related_name='partner_meetings',
         verbose_name='Партнёр',
     )
-    date = models.DateField(verbose_name='Дата встречи')
+    date = models.DateField(
+        verbose_name='Дата встречи',
+        default=date.today()
+    )
 
     class Meta:
         verbose_name = 'Встреча'
