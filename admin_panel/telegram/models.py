@@ -52,7 +52,7 @@ class Meeting(models.Model):
     )
     date = models.DateField(
         verbose_name='Дата встречи',
-        default=date.today()
+        auto_now_add=True,
     )
 
     class Meta:
