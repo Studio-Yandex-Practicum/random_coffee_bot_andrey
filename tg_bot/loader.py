@@ -4,8 +4,11 @@ import django
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import RedisStorage, Redis
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+from admin_panel.django_settings.settings import TIME_ZONE
 from tg_bot.config import BOT_TOKEN, DEBUG
+from tg_bot.misc import mailing
 
 
 def setup_django():
@@ -25,6 +28,11 @@ def include_all_routers():
 
 setup_django()
 bot = Bot(token=BOT_TOKEN, parse_mode='HTML')
+scheduler = AsyncIOScheduler(timezone=TIME_ZONE)  # 'Europe/Moscow'  timezone=TIME_ZONE
+scheduler.add_job(mailing, trigger='cron',
+                  day_of_week='tue', hour=00, minute=48,
+                  kwargs={'bot': bot})
+scheduler.start()
 
 if DEBUG:
     storage = MemoryStorage()
