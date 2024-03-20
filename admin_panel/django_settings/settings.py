@@ -23,17 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'admin_panel.telegram.apps.TelegramConfig',
-    'django_apscheduler',
 ]
-SCHEDULER_CONFIG = {
-    "apscheduler.jobstores.default": {
-        "class": "django_apscheduler.jobstores:DjangoJobStore"
-    },
-    'apscheduler.executors.processpool': {
-        "type": "threadpool"
-    },
-}
-SCHEDULER_AUTOSTART = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
