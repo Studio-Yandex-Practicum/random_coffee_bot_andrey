@@ -19,7 +19,6 @@ async def main():
         minute=17,  # минуты пока оставлены для тестирования
     )
     scheduler.start()
-    print(test_mailing)
     try:
         await dp.start_polling(bot)
     finally:
