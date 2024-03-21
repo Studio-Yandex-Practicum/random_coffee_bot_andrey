@@ -10,13 +10,19 @@ services:
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   backend:
     build: ./
     env_file: .env
     volumes:
       - static:/backend_static
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     command: >
      sh -c "python django_app.py makemigrations &&
      python django_app.py migrate &&
@@ -34,6 +40,9 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/templates/default.conf.template
       - static:/staticfiles/
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - 8000:80
   redis:
