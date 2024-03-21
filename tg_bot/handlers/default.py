@@ -8,7 +8,6 @@ from tg_bot.handlers.main_menu import main_menu
 from tg_bot.handlers.registration import start_registration
 from tg_bot.middlewares.blocking import BlockingMiddleware
 
-
 default_router = Router()
 default_router.message.middleware(BlockingMiddleware())
 default_router.callback_query.middleware(BlockingMiddleware())
