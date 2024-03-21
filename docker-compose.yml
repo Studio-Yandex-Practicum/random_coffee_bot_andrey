@@ -5,6 +5,7 @@ volumes:
   static:
 
 services:
+
   db:
     image: postgres:13.10
     env_file: .env
@@ -15,6 +16,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    restart: always
+
   backend:
     build: ./
     env_file: .env
@@ -29,12 +32,16 @@ services:
      python django_app.py collectstatic --noinput &&
      cp -r /app/admin_panel/collected_static/. /backend_static/static/ &&
      python django_app.py runserver 0:8000"
+    restart: always
+
   bot:
     build: ./
     depends_on:
        - backend
     command: >
       sh -c "python bot.py"
+    restart: always
+
   gateway:
     image: nginx:1.22.1
     volumes:
@@ -45,5 +52,10 @@ services:
         condition: service_healthy
     ports:
       - 8000:80
+    restart: always
+
   redis:
-    image: redis
+    image: redis:alpine
+    env_file:
+      - .env
+    restart: always
