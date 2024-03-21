@@ -17,7 +17,6 @@ async def main():
         day_of_week=MEETING_DAY,
         hour=MEETING_TIME,
         minute=17,  # минуты пока оставлены для тестирования
-        
     )
     scheduler.start()
     print(test_mailing)
