@@ -8,7 +8,6 @@ from tg_bot.handlers.main_menu import main_menu
 from tg_bot.handlers.registration import start_registration
 from tg_bot.middlewares.blocking import BlockingMiddleware
 
-
 default_router = Router()
 default_router.message.middleware(BlockingMiddleware())
 default_router.callback_query.middleware(BlockingMiddleware())
@@ -27,8 +26,8 @@ async def command_start(message: Message, state: FSMContext):
 
 @default_router.message(Command('test'))
 async def command_test(message: Message, state: FSMContext):
-    from tg_bot.misc.creating_unique_pairs import generate_unique_pairs
     from admin_panel.telegram.models import TgUser
+    from tg_bot.misc.creating_unique_pairs import generate_unique_pairs
     for i in range(1, 6):
         username = f"user{i}"
         email = f"user{i}@groupeseb.ru"
@@ -51,4 +50,4 @@ async def command_test(message: Message, state: FSMContext):
         )
         print(f"Создан пользователь: {user.email}")
 
-    generate_unique_pairs()
+    await generate_unique_pairs()
