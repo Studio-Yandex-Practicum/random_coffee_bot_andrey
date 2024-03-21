@@ -18,4 +18,4 @@ logging.basicConfig(level=logging.DEBUG if DEBUG else logging.INFO)
 
 """Настройки для рассылки"""
 MEETING_DAY: str = 'thu'  # дни недели: mon,tue,wed,thu,fri,sat,sun
-MEETING_TIME: int = 13
+MEETING_TIME: int = 14
