@@ -1,18 +1,29 @@
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from admin_panel.telegram.models import TgUser
+from tg_bot.keyboards.callback_data import BlockUserCallback
 
-def get_callback_btns(
-        *,
-        btns: dict[str, str],
-        sizes: tuple[int] = (2,)):
-    keyboard = InlineKeyboardBuilder()
 
-    for btn_name, data in btns.items():
-        keyboard.add(
-            InlineKeyboardButton(
-                text=btn_name,
-                callback_data=data
-            )
-        )
-    return keyboard.adjust(*sizes).as_markup()
+def kb_block_unblock_user(tg_user: TgUser):
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text='Заблокировать' if tg_user.is_unblocked else 'Разблокировать',
+        callback_data=BlockUserCallback(user_id=tg_user.id,
+                                        block=tg_user.is_unblocked),
+    )
+    builder.button(
+        text='Отмена',
+        callback_data='cancel',
+    )
+    return builder.as_markup()
+
+
+def kb_cancel():
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text='Отмена',
+        callback_data='cancel',
+    )
+    return builder.as_markup()
