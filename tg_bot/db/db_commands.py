@@ -24,3 +24,12 @@ def get_tg_user(user_id):
 @sync_to_async
 def search_tg_user(email: str):
     return TgUser.objects.filter(email=email).first()
+
+
+@sync_to_async
+def update_user(tg_user):
+    tg_user.save()
+
+
+# @sync_to_async
+# def get_

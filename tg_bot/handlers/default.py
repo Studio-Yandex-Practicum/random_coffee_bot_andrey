@@ -14,7 +14,7 @@ default_router.message.middleware(BlockingMiddleware())
 default_router.callback_query.middleware(BlockingMiddleware())
 
 
-@default_router.message(Command('start'))
+@default_router.message(Command('start')) # После ввода старт уставновить поле bot_unblocked== True
 async def command_start(message: Message, state: FSMContext):
     """Ввод команды /start"""
     user_id = message.from_user.id
