@@ -28,6 +28,25 @@ async def create_pair(
     meeting_list.append(await create_meeting(user=partner, partner=user))
 
 
+async def create_meetings_for_last_user(
+        user: TgUser,
+        partners: tuple[TgUser, TgUser],
+        meeting_list: list[Meeting],
+) -> None:
+    """
+    Асинхронно создает встречи между указанным пользователем и партнерами.
+    Созданные встречи добавляются в список встреч.
+
+    Args:
+        user: Текущий пользователь, для которого нужно создать встречи.
+        partners: Кортеж партнеров, с каждым из которых нужно создать встречу.
+        meeting_list: Список созданных встреч.
+    """
+    for partner in partners:
+        meeting_list.append(await create_meeting(user=user, partner=partner))
+        meeting_list.append(await create_meeting(user=partner, partner=user))
+
+
 async def generate_unique_pairs() -> list[Meeting]:
     """
     Генерирует уникальные пары пользователей, учитывая предыдущие встречи и
@@ -63,5 +82,30 @@ async def generate_unique_pairs() -> list[Meeting]:
             if available_old_partners:
                 await create_pair(
                     user, available_old_partners, users, meeting_list)
+
+    if len(users) == 1:
+        user = users.pop()
+        partners_ids = await get_partners_ids(user)
+        available_meetings = [
+            meeting for meeting in meeting_list
+            if meeting.user_id not in partners_ids
+            and meeting.partner_id not in partners_ids
+        ]
+
+        if available_meetings:
+            chosen_meeting = random.choice(available_meetings)
+            await create_meetings_for_last_user(user, (chosen_meeting.user, chosen_meeting.partner), meeting_list)
+
+        else:
+            old_partners_ids = await get_partners_ids(user, old=True)
+            available_meetings = [
+                meeting for meeting in meeting_list
+                if meeting.user_id in old_partners_ids
+                and meeting.partner_id in old_partners_ids
+            ]
+
+            if available_meetings:
+                chosen_meeting = random.choice(available_meetings)
+                await create_meetings_for_last_user(user, (chosen_meeting.user, chosen_meeting.partner), meeting_list)
 
     return meeting_list
