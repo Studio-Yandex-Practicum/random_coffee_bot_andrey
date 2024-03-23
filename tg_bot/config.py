@@ -17,5 +17,5 @@ ALLOWED_DOMAIN = os.getenv('ALLOWED_DOMAIN')
 logging.basicConfig(level=logging.DEBUG if DEBUG else logging.INFO)
 
 """Настройки для рассылки"""
-MEETING_DAY: str = 'fri'  # дни недели: mon,tue,wed,thu,fri,sat,sun
-MEETING_TIME: int = 12
+MEETING_DAY: str = 'sat'  # дни недели: mon,tue,wed,thu,fri,sat,sun
+MEETING_TIME: int = 19
