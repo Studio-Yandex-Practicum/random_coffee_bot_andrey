@@ -68,20 +68,15 @@ async def generate_unique_pairs() -> list[Meeting]:
             if partner.id not in partners_ids
         ]
 
-        if available_partners:
-            await create_pair(
-                user, available_partners, users, meeting_list)
-
-        else:
+        if not available_partners:
             old_partners_ids = await get_partners_ids(user, old=True)
-            available_old_partners = [
+            available_partners = [
                 partner for partner in users
                 if partner.id in old_partners_ids
             ]
 
-            if available_old_partners:
-                await create_pair(
-                    user, available_old_partners, users, meeting_list)
+        if available_partners:
+            await create_pair(user, available_partners, users, meeting_list)
 
     if len(users) == 1:
         user = users.pop()
@@ -92,11 +87,7 @@ async def generate_unique_pairs() -> list[Meeting]:
             and meeting.partner_id not in partners_ids
         ]
 
-        if available_meetings:
-            chosen_meeting = random.choice(available_meetings)
-            await create_meetings_for_last_user(user, (chosen_meeting.user, chosen_meeting.partner), meeting_list)
-
-        else:
+        if not available_meetings:
             old_partners_ids = await get_partners_ids(user, old=True)
             available_meetings = [
                 meeting for meeting in meeting_list
@@ -104,8 +95,12 @@ async def generate_unique_pairs() -> list[Meeting]:
                 and meeting.partner_id in old_partners_ids
             ]
 
-            if available_meetings:
-                chosen_meeting = random.choice(available_meetings)
-                await create_meetings_for_last_user(user, (chosen_meeting.user, chosen_meeting.partner), meeting_list)
+        if available_meetings:
+            chosen_meeting = random.choice(available_meetings)
+            await create_meetings_for_last_user(
+                user,
+                (chosen_meeting.user, chosen_meeting.partner),
+                meeting_list,
+            )
 
     return meeting_list
