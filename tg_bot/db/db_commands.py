@@ -29,6 +29,12 @@ def search_tg_user(email: str):
 
 
 @sync_to_async
+def save_model(model):
+    """Сохранение изменений в модели"""
+    model.save()
+ 
+
+@sync_to_async
 def create_meeting(user: TgUser, partner: TgUser):
     """Создаёт и возвращает экземпляр встречи"""
     return Meeting.objects.create(user=user, partner=partner)
@@ -65,3 +71,6 @@ def get_partners_ids(user: TgUser, old: bool = False) -> set[int]:
     else:
         query = user.user_meetings
     return set(query.values_list('partner', flat=True))
+
+  
+  
