@@ -23,6 +23,6 @@ async def command_start(message: Message, state: FSMContext):
         if tg_user.bot_unblocked is False:
             tg_user.bot_unblocked = True
             await save_model(tg_user)
-        await main_menu(message, tg_user)
+        await main_menu(message)
     else:
         await start_registration(message, state)

@@ -16,7 +16,7 @@ async def main():
         trigger='cron',
         day_of_week=MEETING_DAY,
         hour=MEETING_TIME,
-        minute=40,  # минуты пока оставлены для тестирования
+        minute=16,  # минуты пока оставлены для тестирования
     )
     scheduler.start()
     try:

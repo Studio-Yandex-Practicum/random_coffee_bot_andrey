@@ -67,8 +67,6 @@ async def generate_unique_pairs() -> list[Meeting]:
 
     return meeting_list
 
-# и жожелать функцию ниже
-
 
 async def create_data_for_mailing(meeting_list: list[Meeting]):
     """Функция для создания данных для рассылки.
@@ -77,11 +75,10 @@ async def create_data_for_mailing(meeting_list: list[Meeting]):
     data_mailing = {}
     for user in meeting_list:
         data_mailing[user] = (
-            f'''Ваш партнер для кофе:\
-            {user.partner.enter_full_name,
-             user.partner.email,
-             user.partner.username}
-            приглашает вас на чашечку кофе'''
+            f'Ваш партнер для кофе\n'
+            f'Имя и Фамилия: {user.partner.enter_full_name}\n'
+            f'Почта: {user.partner.email}\n'
+            f'{"Никнейм в телеграмме: @" + user.partner.username if user.partner.username else ""}'
         )
     return data_mailing
 

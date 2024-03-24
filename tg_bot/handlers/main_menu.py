@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import Message
 
-from admin_panel.telegram.models import TgUser
+from tg_bot.db.db_commands import get_tg_user
 from tg_bot.middlewares.blocking import BlockingMiddleware
 from tg_bot.keyboards.reply import kb_main_menu
 
@@ -59,8 +59,9 @@ ABOUT_TEXT = '''
 ''' # noqa
 
 
-async def main_menu(message: Message, tg_user: TgUser):
+async def main_menu(message: Message):
     """Главное меню"""
+    tg_user = await get_tg_user(message.from_user.id)
     await message.answer(
         GREETING_TEXT,
         reply_markup=kb_main_menu(include_resume_button=tg_user.is_active)
