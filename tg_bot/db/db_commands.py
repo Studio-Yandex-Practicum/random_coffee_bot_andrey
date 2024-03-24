@@ -1,7 +1,9 @@
-from asgiref.sync import sync_to_async
-from aiogram.types.user import User
+from datetime import date, timedelta
 
-from admin_panel.telegram.models import TgUser
+from aiogram.types.user import User
+from asgiref.sync import sync_to_async
+
+from admin_panel.telegram.models import Meeting, TgUser
 
 
 @sync_to_async
@@ -30,3 +32,45 @@ def search_tg_user(email: str):
 def save_model(model):
     """Сохранение изменений в модели"""
     model.save()
+ 
+
+@sync_to_async
+def create_meeting(user: TgUser, partner: TgUser):
+    """Создаёт и возвращает экземпляр встречи"""
+    return Meeting.objects.create(user=user, partner=partner)
+
+
+@sync_to_async
+def get_active_users() -> set[TgUser]:
+    """Возвращает множество активных пользователей"""
+    return set(TgUser.objects.filter(
+        is_active=True,
+        is_unblocked=True,
+        bot_unblocked=True,
+    ))
+
+
+@sync_to_async
+def get_partners_ids(user: TgUser, old: bool = False) -> set[int]:
+    """
+    Асинхронно извлекает и возвращает множество ID партнёров, с которыми у
+    указанного пользователя была встреча. Позволяет также получить тех
+    партнёров, с кем встречи были более полугода назад.
+
+    Args:
+        user: Пользователь, для которого необходимо получить ID партнёров.
+        old: Если True, возвращает ID партнёров, с которыми последняя встреча
+             была более полугода назад. По умолчанию False.
+
+    Returns:
+        set[int]: Множество ID партнёров в соответствии с выбранным условием.
+    """
+    if old:
+        half_year_ago = date.today() - timedelta(days=180)
+        query = user.user_meetings.filter(date__lt=half_year_ago)
+    else:
+        query = user.user_meetings
+    return set(query.values_list('partner', flat=True))
+
+  
+  

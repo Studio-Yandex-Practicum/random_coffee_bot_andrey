@@ -1,7 +1,7 @@
 from aiogram import Router, F
-from aiogram.filters import Command
 from aiogram.types import Message
 
+from tg_bot.db.db_commands import get_tg_user
 from tg_bot.middlewares.blocking import BlockingMiddleware
 from tg_bot.keyboards.reply import kb_main_menu
 
@@ -59,12 +59,20 @@ ABOUT_TEXT = '''
 ''' # noqa
 
 
-@main_menu_router.message(Command('start'))
 async def main_menu(message: Message):
-    """Ввод команды /start"""
-    await message.answer(
-        GREETING_TEXT,
-        reply_markup=kb_main_menu())
+    """Главное меню"""
+    user = await get_tg_user(message.from_user.id)
+    user_is_active = user.is_active
+    if user_is_active:
+        await message.answer(
+            GREETING_TEXT,
+            reply_markup=kb_main_menu(include_resume_button=True)
+        )
+    else:
+        await message.answer(
+            GREETING_TEXT,
+            reply_markup=kb_main_menu(include_resume_button=False)
+        )
 
 
 @main_menu_router.message(F.text == 'О проекте')
