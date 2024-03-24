@@ -78,7 +78,8 @@ async def create_data_for_mailing(meeting_list: list[Meeting]):
             f'Ваш партнер для кофе\n'
             f'Имя и Фамилия: {user.partner.enter_full_name}\n'
             f'Почта: {user.partner.email}\n'
-            f'{"Никнейм в телеграмме: @" + user.partner.username if user.partner.username else ""}'
+            f'Никнейм в телеграмме: ' + (
+                f'@{user.partner.username}' if user.partner.username else '')
         )
     return data_mailing
 

@@ -16,5 +16,5 @@ class BlockingMiddleware(BaseMiddleware):
                         show_alert=True
                     )
                 return
-
+            data['tg_user'] = user
         await handler(event, data)

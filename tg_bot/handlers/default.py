@@ -3,7 +3,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from tg_bot.db.db_commands import get_tg_user
+from admin_panel.telegram.models import TgUser
 from tg_bot.handlers.main_menu import main_menu
 from tg_bot.handlers.registration import start_registration
 from tg_bot.middlewares.blocking import BlockingMiddleware
@@ -15,10 +15,8 @@ default_router.callback_query.middleware(BlockingMiddleware())
 
 
 @default_router.message(Command('start'))
-async def command_start(message: Message, state: FSMContext):
+async def command_start(message: Message, state: FSMContext, tg_user: TgUser):
     """Ввод команды /start"""
-    user_id = message.from_user.id
-    tg_user = await get_tg_user(user_id)
     if tg_user:
         if tg_user.bot_unblocked is False:
             tg_user.bot_unblocked = True
