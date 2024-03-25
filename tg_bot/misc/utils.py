@@ -25,6 +25,7 @@ async def delete_message(message: Message, sleep_time: int = 600) -> None:
 
 
 async def set_commands(bot: Bot):
+    """Функция для формирования списка команд для кнопки Menu"""
     commands = [
         BotCommand(
             command='start',
