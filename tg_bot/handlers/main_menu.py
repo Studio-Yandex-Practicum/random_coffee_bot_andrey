@@ -112,6 +112,12 @@ async def answer_suspend_participation(
         reply_markup=kb_main_menu(include_resume_button=tg_model.is_active))
 
 
+@main_menu_router.callback_query(F.data.startswith('no'))
+async def stop(callback: CallbackQuery):
+    """Отмена приостановления участия."""
+    await callback.message.delete()
+
+
 @main_menu_router.message(F.text == 'О проекте')
 async def about_project(message: Message):
     """ Раздел о проекте """
