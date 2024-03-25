@@ -1,7 +1,8 @@
 from asyncio import sleep
 from typing import Optional
 
-from aiogram.types import Message
+from aiogram import Bot
+from aiogram.types import Message, BotCommand, BotCommandScopeDefault
 
 
 async def get_entered_name(text: str) -> Optional[str]:
@@ -21,3 +22,14 @@ async def delete_message(message: Message, sleep_time: int = 600) -> None:
         await message.delete()
     except Exception:
         return
+
+
+async def set_commands(bot: Bot):
+    """Функция для формирования списка команд для кнопки Menu"""
+    commands = [
+        BotCommand(
+            command='start',
+            description='Начало работы'
+        )
+    ]
+    await bot.set_my_commands(commands, BotCommandScopeDefault())
