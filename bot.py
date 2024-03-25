@@ -6,10 +6,12 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from tg_bot.loader import bot, dp
 from tg_bot.misc.creating_unique_pairs import start_random_cofee
 from tg_bot.config import MEETING_TIME, MEETING_DAY
+from tg_bot.misc.utils import set_commands
 
 
 async def main():
     logging.info('Начало работы бота.')
+    await set_commands(bot)
     scheduler = AsyncIOScheduler()
     scheduler.add_job(
         start_random_cofee,
