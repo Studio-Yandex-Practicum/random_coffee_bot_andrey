@@ -52,7 +52,7 @@ async def get_name(message: Message):
                              )
 
 
-@admin_router.callback_query(F.data.startswith('cancel'))
+@admin_router.callback_query(Admin.get_email, F.data == 'cancel')
 async def stop(callback: CallbackQuery, state: FSMContext):
     """Отмена."""
     await callback.message.answer("Вы отменили текущее действие")

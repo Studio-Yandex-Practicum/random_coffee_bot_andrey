@@ -2,11 +2,9 @@ from aiogram.filters.callback_data import CallbackData
 
 
 class BlockUserCallback(CallbackData, prefix='blocked'):
-    user_id: int
-    block: bool
+    user_id: int  # ID пользователя
+    block: bool  # Блокирование пользователя
 
 
-class UserIsActiveCallback(CallbackData, prefix='is_active'):
-    is_active: bool
-
-
+class ParticipationCallback(CallbackData, prefix='participation'):
+    is_active: bool  # активация пользователя в программе

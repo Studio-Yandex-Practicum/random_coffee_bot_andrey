@@ -3,7 +3,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from admin_panel.telegram.models import TgUser
 from tg_bot.keyboards.callback_data import (
     BlockUserCallback,
-    UserIsActiveCallback,
+    ParticipationCallback,
 )
 
 
@@ -32,15 +32,15 @@ def kb_cancel():
     return builder.as_markup()
 
 
-def kb_yes_or_no(tg_user: TgUser):
+def kb_yes_or_no():
     builder = InlineKeyboardBuilder()
 
     builder.button(
         text='Да',
-        callback_data=UserIsActiveCallback(is_active=tg_user.is_active),
+        callback_data=ParticipationCallback(is_active=True),
     )
     builder.button(
         text='Нет',
-        callback_data=UserIsActiveCallback(is_active=tg_user.is_active),
+        callback_data=ParticipationCallback(is_active=False),
     )
     return builder.as_markup()
