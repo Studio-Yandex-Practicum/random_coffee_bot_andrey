@@ -1,10 +1,11 @@
 from aiogram import Router, F
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 
-from tg_bot.db.db_commands import get_tg_user
+from tg_bot.db import db_commands as db
+from tg_bot.keyboards.inline import kb_yes_or_no
 from tg_bot.middlewares.blocking import BlockingMiddleware
 from tg_bot.keyboards.reply import kb_main_menu
-
+from tg_bot.misc.utils import delete_message
 
 main_menu_router = Router()
 main_menu_router.message.middleware(BlockingMiddleware())
@@ -12,9 +13,15 @@ main_menu_router.callback_query.middleware(BlockingMiddleware())
 
 
 MSG_SUSPEND = (
-    'Если вы передумали принимать участие в какую-либо неделю или '
-    'уходите в отпуск, то можно приостановить участие в проекте.'
+    'Если вы передумали принимать участие\n'
+    'в какую-либо неделю или уходите в отпуск,\n'
+    'то можно приостановить участие в проекте.\n'
+    '\n'
+    'Хотите приостановить участие?'
 )
+
+APPLY_SUSPEND = 'Вы успешно приостановили участие'
+RESUME_PARTICIPATION = 'Вы успешно возобновили участие'
 
 MSG_REVIEW = (
     '<b>Милена Мелкова, Cпециалист по продукту.</b>\n'
@@ -61,7 +68,7 @@ ABOUT_TEXT = '''
 
 async def main_menu(message: Message):
     """Главное меню"""
-    user = await get_tg_user(message.from_user.id)
+    user = await db.get_tg_user(message.from_user.id)
     user_is_active = user.is_active
     if user_is_active:
         await message.answer(
@@ -84,7 +91,30 @@ async def about_project(message: Message):
 @main_menu_router.message(F.text == 'Приостановить участие')
 async def suspend_participation(message: Message):
     """Приостановление участия."""
-    await message.answer(MSG_SUSPEND)
+    msg = await message.answer(MSG_SUSPEND, reply_markup=kb_yes_or_no())
+    await delete_message(msg)
+
+
+@main_menu_router.message(F.text == 'Возобновить участие')
+async def resume_participation(message: Message):
+    """Возобновление участия."""
+    user = await db.get_tg_user(message.from_user.id)
+    user.is_active = True
+    await db.save_model(user)
+    msg = await message.answer(RESUME_PARTICIPATION)
+    await delete_message(msg)
+
+
+@main_menu_router.callback_query(F.data.in_({'yes', 'no'}))
+async def answer_suspend_participation(callback: CallbackQuery):
+    """Приостановление участия."""
+    await callback.message.delete()
+    user = await db.get_tg_user(callback.from_user.id)
+    if callback.data == 'yes':
+        user.is_active = False
+        await db.save_model(user)
+        msg = await callback.message.answer(APPLY_SUSPEND)
+        await delete_message(msg)
 
 
 @main_menu_router.message(F.text == 'Наши коллеги про проект «Кофе вслепую»')

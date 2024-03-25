@@ -27,3 +27,17 @@ def kb_cancel():
         callback_data='cancel',
     )
     return builder.as_markup()
+
+
+def kb_yes_or_no():
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text='Да',
+        callback_data='yes',
+    )
+    builder.button(
+        text='Нет',
+        callback_data='no',
+    )
+    return builder.as_markup()
