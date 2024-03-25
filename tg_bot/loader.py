@@ -31,5 +31,5 @@ if DEBUG:
 else:
     storage = RedisStorage(Redis())
 
-dp = Dispatcher()
+dp = Dispatcher(storage=storage)
 include_all_routers()
