@@ -29,7 +29,7 @@ bot = Bot(token=BOT_TOKEN, parse_mode='HTML')
 if DEBUG:
     storage = MemoryStorage()
 else:
-    storage = RedisStorage(Redis())
+    storage = RedisStorage(Redis(host='redis'))
 
-dp = Dispatcher()
+dp = Dispatcher(storage=storage)
 include_all_routers()
