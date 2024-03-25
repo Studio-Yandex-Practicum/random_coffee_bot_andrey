@@ -6,7 +6,7 @@ class BlockUserCallback(CallbackData, prefix='blocked'):
     block: bool
 
 
-class ActiveUserCallback(CallbackData, prefix='active'):
-    user_id: int
+class UserIsActiveCallback(CallbackData, prefix='is_active'):
     is_active: bool
+
 

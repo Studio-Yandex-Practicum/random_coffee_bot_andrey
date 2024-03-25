@@ -1,8 +1,10 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from admin_panel.telegram.models import TgUser
-from tg_bot.keyboards.callback_data import BlockUserCallback, \
-    ActiveUserCallback
+from tg_bot.keyboards.callback_data import (
+    BlockUserCallback,
+    UserIsActiveCallback,
+)
 
 
 def kb_block_unblock_user(tg_user: TgUser):
@@ -35,11 +37,10 @@ def kb_yes_or_no(tg_user: TgUser):
 
     builder.button(
         text='Да',
-        callback_data=ActiveUserCallback(user_id=tg_user.id,
-                                         is_active=tg_user.is_active),
+        callback_data=UserIsActiveCallback(is_active=tg_user.is_active),
     )
     builder.button(
         text='Нет',
-        callback_data='no',
+        callback_data=UserIsActiveCallback(is_active=tg_user.is_active),
     )
     return builder.as_markup()
