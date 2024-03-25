@@ -8,6 +8,7 @@ from admin_panel.telegram.models import Meeting, TgUser
 
 @sync_to_async
 def create_tg_user(user: User, email: str, enter_full_name: str):
+    """Создаёт и возвращает экземпляр пользователя TgUser"""
     tg_user = TgUser.objects.create(
         id=user.id,
         email=email,
@@ -20,11 +21,13 @@ def create_tg_user(user: User, email: str, enter_full_name: str):
 
 @sync_to_async
 def get_tg_user(user_id):
+    """Возвращает экземпляр требуемого пользователя по id"""
     return TgUser.objects.filter(id=user_id).first()
 
 
 @sync_to_async
 def search_tg_user(email: str):
+    """Возвращает экземпляр требуемого пользователя по email"""
     return TgUser.objects.filter(email=email).first()
 
 
