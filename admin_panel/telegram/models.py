@@ -1,3 +1,4 @@
+from django.core.validators import MaxLengthValidator
 from django.db import models
 
 
@@ -57,5 +58,23 @@ class Meeting(models.Model):
         verbose_name = 'Встреча'
         verbose_name_plural = 'Встречи'
 
-    def __str__(self):
-        return f'Встреча {self.user} с {self.partner}, дата - {self.date}'
+
+class Mailing(models.Model):
+    """Модель рассылки"""
+    text = models.TextField(
+        verbose_name='Текст рассылки',
+        help_text='Введите текст рассылки',
+        validators=(MaxLengthValidator(4096),),
+    )
+    date_mailing = models.DateTimeField(
+        verbose_name='Дата и время рассылки',
+        help_text='Установите дату и время рассылки',
+    )
+    is_sent = models.BooleanField(
+        verbose_name='Статус отправки',
+        default=False,
+    )
+
+    class Meta:
+        verbose_name = 'Рассылка'
+        verbose_name_plural = 'Рассылки'

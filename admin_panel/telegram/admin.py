@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import TgUser
+from .models import Mailing, TgUser
 
 
 @admin.register(TgUser)
@@ -9,6 +9,7 @@ class TgUserAdmin(admin.ModelAdmin):
         'enter_full_name',
         'full_name',
         'username',
+        'is_active',
         'is_unblocked',
         'bot_unblocked',
     )
@@ -16,3 +17,14 @@ class TgUserAdmin(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
         """Убирает возможность создания пользователей через админку"""
         return False
+
+
+@admin.register(Mailing)
+class MailingAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'text',
+        'date_mailing',
+        'is_sent',
+    )
+    readonly_fields = ('is_sent',)
