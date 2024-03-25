@@ -1,4 +1,3 @@
-from django.core.validators import MaxLengthValidator
 from django.db import models
 
 
@@ -64,7 +63,7 @@ class Mailing(models.Model):
     text = models.TextField(
         verbose_name='Текст рассылки',
         help_text='Введите текст рассылки',
-        validators=(MaxLengthValidator(4096),),
+        max_length=4096,
     )
     date_mailing = models.DateTimeField(
         verbose_name='Дата и время рассылки',
