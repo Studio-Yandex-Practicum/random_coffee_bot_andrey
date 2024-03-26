@@ -1,4 +1,6 @@
+import logging
 import requests
+
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -89,12 +91,13 @@ def send_telegram_message(id, text, token):
     params = {"chat_id": id, "text": text}
     response = requests.post(url, json=params)
     if response.status_code != 200:
-        print("Ошибка при отправке сообщения:", response.text)
+        logging.error("Ошибка при отправке сообщения: %s", response.text)
 
 
 @receiver(pre_save, sender=TgUser)
 def send_notification_on_block(sender, instance, **kwargs):
-    if instance.is_unblocked != TgUser.objects.get(pk=instance.pk).is_unblocked:
+    user = TgUser.objects.filter(pk=instance.pk).first()
+    if user and instance.is_unblocked != user.is_unblocked:
         if instance.is_unblocked:
             message = "Вас разблокировал администратор"
         else:
