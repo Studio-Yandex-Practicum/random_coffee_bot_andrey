@@ -1,5 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
+from aiogram.types.input_file import FSInputFile
+
 
 from admin_panel.telegram.models import TgUser
 from tg_bot.db.db_commands import get_tg_user, save_model
@@ -8,6 +10,7 @@ from tg_bot.keyboards.inline import kb_yes_or_no
 from tg_bot.middlewares.blocking import BlockingMiddleware
 from tg_bot.keyboards.reply import kb_main_menu
 from tg_bot.misc.utils import delete_message
+
 
 main_menu_router = Router()
 main_menu_router.message.middleware(BlockingMiddleware())
@@ -69,8 +72,8 @@ ABOUT_TEXT = '''
 async def main_menu(message: Message):
     """Главное меню"""
     tg_user = await get_tg_user(message.from_user.id)
-    await message.answer(
-        GREETING_TEXT,
+    await message.answer_photo(
+        photo=FSInputFile('logo.jpg'), caption=GREETING_TEXT,
         reply_markup=kb_main_menu(include_resume_button=tg_user.is_active)
     )
 
