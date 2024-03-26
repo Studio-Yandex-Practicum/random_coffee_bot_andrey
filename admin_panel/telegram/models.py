@@ -1,4 +1,11 @@
+import logging
+import requests
+
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+from tg_bot.config import BOT_TOKEN
 
 
 class TgUser(models.Model):
@@ -77,3 +84,23 @@ class Mailing(models.Model):
     class Meta:
         verbose_name = 'Рассылка'
         verbose_name_plural = 'Рассылки'
+
+
+def send_telegram_message(id, text, token):
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    params = {"chat_id": id, "text": text}
+    response = requests.post(url, json=params)
+    if response.status_code != 200:
+        logging.error("Ошибка при отправке сообщения: %s", response.text)
+
+
+@receiver(pre_save, sender=TgUser)
+def send_notification_on_block(sender, instance, **kwargs):
+    user = TgUser.objects.filter(pk=instance.pk).first()
+    if user and instance.is_unblocked != user.is_unblocked:
+        if instance.is_unblocked:
+            message = "Вас разблокировал администратор"
+        else:
+            message = "Вас заблокировал администратор"
+        send_telegram_message(instance.id, message, BOT_TOKEN)
+
