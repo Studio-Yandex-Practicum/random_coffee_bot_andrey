@@ -28,3 +28,13 @@ class MailingAdmin(admin.ModelAdmin):
         'is_sent',
     )
     readonly_fields = ('is_sent',)
+
+
+from .models import Meeting
+@admin.register(Meeting)
+class MeetingAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'user',
+        'partner',
+    )
