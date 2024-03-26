@@ -24,7 +24,7 @@ async def main():
     scheduler.add_job(
         start_random_cofee,
         trigger='interval',
-        minutes=1,
+        seconds=5,
     )
     scheduler.add_job(
         mailing_date,

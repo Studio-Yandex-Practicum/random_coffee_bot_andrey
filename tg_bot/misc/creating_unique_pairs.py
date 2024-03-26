@@ -111,16 +111,17 @@ async def create_data_for_mailing(meeting_list: list[Meeting]):
     """Функция для создания данных для рассылки.
     Принимает на вход список list[Meeting],
     возвращает словарь dict[TgUser, str] """
-    data_mailing = {}
+    data_mailing = list()
     for meeting in meeting_list:
-        data_mailing[meeting.user] = (
+        text_message = (
             f'Ваш партнер для кофе\n'
             f'Имя и Фамилия: {meeting.partner.enter_full_name}\n'
             f'Почта: {meeting.partner.email}\n'
             f'Никнейм в телеграмме: '
             + (f'@{meeting.partner.username}'
-               if meeting.partner.username else '')
-        )
+               if meeting.partner.username else ''
+        ))
+        data_mailing.append((meeting.user, text_message))
     return data_mailing
 
 
@@ -128,5 +129,5 @@ async def start_random_cofee():
     """Функция для зупуска через AsyncIOScheduler в файле bot.py"""
     meeting_list = await generate_unique_pairs()
     data_mailing = await create_data_for_mailing(meeting_list)
-    for user, message in data_mailing.items():
+    for user, message in data_mailing:
         await send_message(user, message)
