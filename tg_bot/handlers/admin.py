@@ -3,6 +3,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
+from admin_panel.telegram.models import check_and_send_message_before_save
 from tg_bot.db import db_commands as db
 from tg_bot.keyboards.callback_data import BlockUserCallback
 from tg_bot.keyboards.inline import kb_block_unblock_user, kb_cancel
@@ -67,6 +68,7 @@ async def unblock(callback: CallbackQuery, callback_data: BlockUserCallback):
     user_id = callback_data.user_id
     tg_model = await db.get_tg_user(user_id)
     tg_model.is_unblocked = not callback_data.block
+    await check_and_send_message_before_save(tg_model)
     await db.save_model(tg_model)
 
     msg = 'разблокирован' if tg_model.is_unblocked else 'заблокирован'

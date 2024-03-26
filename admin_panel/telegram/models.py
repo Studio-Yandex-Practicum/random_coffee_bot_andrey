@@ -1,4 +1,7 @@
+import aiohttp
 from django.db import models
+
+from tg_bot.config import BOT_TOKEN
 
 
 class TgUser(models.Model):
@@ -77,3 +80,21 @@ class Mailing(models.Model):
     class Meta:
         verbose_name = 'Рассылка'
         verbose_name_plural = 'Рассылки'
+
+
+async def send_telegram_message(chat_id, text, token):
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
+                url,
+                data={"chat_id": chat_id, "text": text}
+        ) as response:
+            return await response.text()
+
+
+async def check_and_send_message_before_save(tg_user):
+    chat_id = tg_user.id
+    message_text = ('Вас разблокировал администратор'
+                    if tg_user.is_unblocked else
+                    'Вас заблокировал администратор')
+    await send_telegram_message(chat_id, message_text, BOT_TOKEN)
