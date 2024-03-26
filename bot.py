@@ -14,12 +14,17 @@ async def main():
     logging.info('Начало работы бота.')
     await set_commands(bot)
     scheduler = AsyncIOScheduler()
+    # scheduler.add_job(
+    #     start_random_cofee,
+    #     trigger='cron',
+    #     day_of_week=MEETING_DAY,
+    #     hour=MEETING_TIME,
+    #     minute=16,  # минуты пока оставлены для тестирования
+    # )
     scheduler.add_job(
         start_random_cofee,
-        trigger='cron',
-        day_of_week=MEETING_DAY,
-        hour=MEETING_TIME,
-        minute=16,  # минуты пока оставлены для тестирования
+        trigger='interval',
+        minutes=1,
     )
     scheduler.add_job(
         mailing_date,
