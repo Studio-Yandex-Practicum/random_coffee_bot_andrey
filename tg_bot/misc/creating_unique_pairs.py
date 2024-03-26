@@ -127,4 +127,4 @@ async def start_random_cofee():
     """Функция для зупуска через AsyncIOScheduler в файле bot.py"""
     meeting_list = await generate_unique_pairs()
     data_mailing = await create_data_for_mailing(meeting_list)
-    await mailing(data_mailing)
+    await mailing(data_mailing=data_mailing)

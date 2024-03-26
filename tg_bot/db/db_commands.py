@@ -2,8 +2,9 @@ from datetime import date, timedelta
 
 from aiogram.types.user import User
 from asgiref.sync import sync_to_async
+from django.utils import timezone
 
-from admin_panel.telegram.models import Meeting, TgUser
+from admin_panel.telegram.models import Mailing, Meeting, TgUser
 
 
 @sync_to_async
@@ -54,6 +55,15 @@ def get_active_users() -> set[TgUser]:
 
 
 @sync_to_async
+def get_unblocked_users():
+    """Возвращает всех незаблокированных пользователей"""
+    return TgUser.objects.filter(
+        bot_unblocked=True,
+        is_unblocked=True,
+    )
+
+
+@sync_to_async
 def get_partners_ids(user: TgUser, old: bool = False) -> set[int]:
     """
     Асинхронно извлекает и возвращает множество ID партнёров, с которыми у
@@ -74,3 +84,12 @@ def get_partners_ids(user: TgUser, old: bool = False) -> set[int]:
     else:
         query = user.user_meetings
     return set(query.values_list('partner', flat=True))
+
+
+@sync_to_async
+def get_unsent_mailings():
+    """Возвращает все неразосланные рассылки, чье время отправки наступило"""
+    return Mailing.objects.filter(
+        date_mailing__lte=timezone.now(),
+        is_sent=False,
+    )
