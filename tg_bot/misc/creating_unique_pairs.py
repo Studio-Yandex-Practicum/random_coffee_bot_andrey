@@ -3,7 +3,7 @@ import random
 from admin_panel.telegram.models import Meeting, TgUser
 from tg_bot.db.db_commands import (create_meeting, get_active_users,
                                    get_partners_ids)
-from tg_bot.misc.mailing import mailing
+from tg_bot.misc.mailing import send_message
 
 
 async def create_pair(
@@ -112,13 +112,14 @@ async def create_data_for_mailing(meeting_list: list[Meeting]):
     Принимает на вход список list[Meeting],
     возвращает словарь dict[TgUser, str] """
     data_mailing = {}
-    for user in meeting_list:
-        data_mailing[user] = (
+    for meeting in meeting_list:
+        data_mailing[meeting.user] = (
             f'Ваш партнер для кофе\n'
-            f'Имя и Фамилия: {user.partner.enter_full_name}\n'
-            f'Почта: {user.partner.email}\n'
-            f'Никнейм в телеграмме: ' + (
-                f'@{user.partner.username}' if user.partner.username else '')
+            f'Имя и Фамилия: {meeting.partner.enter_full_name}\n'
+            f'Почта: {meeting.partner.email}\n'
+            f'Никнейм в телеграмме: '
+            + (f'@{meeting.partner.username}'
+               if meeting.partner.username else '')
         )
     return data_mailing
 
@@ -127,4 +128,5 @@ async def start_random_cofee():
     """Функция для зупуска через AsyncIOScheduler в файле bot.py"""
     meeting_list = await generate_unique_pairs()
     data_mailing = await create_data_for_mailing(meeting_list)
-    await mailing(data_mailing)
+    for user, message in data_mailing.items():
+        await send_message(user, message)
