@@ -107,26 +107,6 @@ async def generate_unique_pairs() -> list[Meeting]:
     return meeting_list
 
 
-async def create_message_for_mailing(meeting: Meeting) -> str:
-    """
-    Функция формирует сообщения для рассылки.
-
-    Args:
-        user: Текущая встреча.
-
-    Returns:
-        str: Сообщение для рассылки.
-    """
-    return (
-        f'Ваш партнер для кофе\n'
-        f'Имя и Фамилия: {meeting.partner.enter_full_name}\n'
-        f'Почта: {meeting.partner.email}\n'
-        f'Никнейм в телеграмме: '
-        + (f'@{meeting.partner.username}'
-            if meeting.partner.username else '')
-    )
-
-
 async def start_random_cofee():
     """
     Функция для запуска через AsyncIOScheduler в файле bot.py.
@@ -141,7 +121,14 @@ async def start_random_cofee():
     meeting_list = await generate_unique_pairs()
 
     for meeting in meeting_list:
-        message = await create_message_for_mailing(meeting)
+        message = (
+                f'Ваш партнер для кофе\n'
+                f'Имя и Фамилия: {meeting.partner.enter_full_name}\n'
+                f'Почта: {meeting.partner.email}\n'
+                f'Никнейм в телеграмме: '
+                + (f'@{meeting.partner.username}'
+                    if meeting.partner.username else '')
+        )
 
         if not await send_message(meeting.user, message):
             FAIL_MESSAGE = (
