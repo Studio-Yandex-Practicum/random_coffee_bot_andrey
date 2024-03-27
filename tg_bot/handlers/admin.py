@@ -1,9 +1,9 @@
-from aiogram import Router, F
+from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import CallbackQuery, Message
 
-from admin_panel.django_settings.settings import ALLOWED_HOSTS
+from tg_bot.config import HOST_IP
 from tg_bot.db import db_commands as db
 from tg_bot.keyboards.callback_data import BlockUserCallback
 from tg_bot.keyboards.inline import kb_block_unblock_user, kb_cancel
@@ -17,7 +17,7 @@ admin_router.callback_query.middleware(AdminMiddleware())
 
 ADMIN_WELCOME_TEXT = (
     'Доступ к административным функциям предоставляется через '
-    f'<a href="http://{ALLOWED_HOSTS[0]}">сайт</a>.\n'
+    f'<a href="http://{HOST_IP}">сайт</a>.\n'
     'Для блокировки пользователя <b>через бот</b>, введите его почту:'
 )
 

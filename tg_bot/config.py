@@ -12,6 +12,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 """Domain"""
+HOST_IP = os.getenv('HOST_IP')
 ALLOWED_DOMAIN = os.getenv('ALLOWED_DOMAIN')
 
 logging.basicConfig(level=logging.DEBUG if DEBUG else logging.INFO)
