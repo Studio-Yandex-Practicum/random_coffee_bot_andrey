@@ -16,8 +16,8 @@ admin_router.message.middleware(AdminMiddleware())
 admin_router.callback_query.middleware(AdminMiddleware())
 
 ADMIN_WELCOME_TEXT = (
-    'Доступ к административным функциям предоставляется через сайт: '
-    f'<a>{ALLOWED_HOSTS[0]}:8000</a>\n'
+    'Доступ к административным функциям предоставляется через '
+    f'<a href="http://{ALLOWED_HOSTS[0]}">сайт</a>.\n'
     'Для блокировки пользователя <b>через бот</b>, введите его почту:'
 )
 
