@@ -1,8 +1,9 @@
-from aiogram import Router, F
+from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import CallbackQuery, Message
 
+from tg_bot.config import HOST_IP
 from tg_bot.db import db_commands as db
 from tg_bot.keyboards.callback_data import BlockUserCallback
 from tg_bot.keyboards.inline import kb_block_unblock_user, kb_cancel
@@ -13,6 +14,12 @@ from tg_bot.states.all_states import Admin
 admin_router = Router()
 admin_router.message.middleware(AdminMiddleware())
 admin_router.callback_query.middleware(AdminMiddleware())
+
+ADMIN_WELCOME_TEXT = (
+    'Доступ к административным функциям предоставляется через '
+    f'<a href="http://{HOST_IP}">сайт</a>.\n'
+    'Для блокировки пользователя <b>через бот</b>, введите его почту:'
+)
 
 USER_NOT_EXIST = (
     'Такого пользователя не существует!\n'
@@ -31,7 +38,7 @@ ABOUT_USER = (
 @admin_router.message(Command('admin'))
 async def admin_message(message: Message, state: FSMContext):
     """Предложение ввести почту."""
-    msg = await message.answer('Введите электронную почту пользователя:')
+    msg = await message.answer(text=ADMIN_WELCOME_TEXT)
     await state.set_state(Admin.get_email)
     await delete_message(msg)
 
