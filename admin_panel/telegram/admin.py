@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group, User
 
-from .models import Mailing, TgUser
+from .models import Mailing, TgUser, Meeting
 
 admin.site.unregister(Group)
 admin.site.unregister(User)
@@ -34,11 +34,11 @@ class MailingAdmin(admin.ModelAdmin):
     readonly_fields = ('is_sent',)
 
 
-from .models import Meeting
 @admin.register(Meeting)
 class MeetingAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'user',
         'partner',
+        'date',
     )
