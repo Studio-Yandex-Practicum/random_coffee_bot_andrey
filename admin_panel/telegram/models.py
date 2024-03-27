@@ -18,12 +18,13 @@ class TgUser(models.Model):
         max_length=100,
     )
     username = models.CharField(
-        verbose_name='Имя пользователя',
+        verbose_name='Никнейм',
         max_length=32,
         null=True,
         blank=True
     )
-    full_name = models.CharField(verbose_name='Полное имя', max_length=100)
+    full_name = models.CharField(
+        verbose_name='Имя в телеграмме', max_length=100)
     bot_unblocked = models.BooleanField(
         verbose_name='Бот разблокирован пользователем', default=True)
     is_unblocked = models.BooleanField(
