@@ -107,27 +107,46 @@ async def generate_unique_pairs() -> list[Meeting]:
     return meeting_list
 
 
-async def create_data_for_mailing(meeting_list: list[Meeting]):
-    """Функция для создания данных для рассылки.
-    Принимает на вход список list[Meeting],
-    возвращает словарь dict[TgUser, str] """
-    data_mailing = list()
-    for meeting in meeting_list:
-        text_message = (
-            f'Ваш партнер для кофе\n'
-            f'Имя и Фамилия: {meeting.partner.enter_full_name}\n'
-            f'Почта: {meeting.partner.email}\n'
-            f'Никнейм в телеграмме: '
-            + (f'@{meeting.partner.username}'
-               if meeting.partner.username else ''
-        ))
-        data_mailing.append((meeting.user, text_message))
-    return data_mailing
+async def create_message_for_mailing(meeting: Meeting) -> str:
+    """
+    Функция формирует сообщения для рассылки.
+
+    Args:
+        user: Текущая встреча.
+
+    Returns:
+        str: Сообщение для рассылки.
+    """
+    return (
+        f'Ваш партнер для кофе\n'
+        f'Имя и Фамилия: {meeting.partner.enter_full_name}\n'
+        f'Почта: {meeting.partner.email}\n'
+        f'Никнейм в телеграмме: '
+        + (f'@{meeting.partner.username}'
+            if meeting.partner.username else '')
+    )
 
 
 async def start_random_cofee():
-    """Функция для зупуска через AsyncIOScheduler в файле bot.py"""
+    """
+    Функция для запуска через AsyncIOScheduler в файле bot.py.
+
+    Инициирует процесс случайного подбора пар. Для каждой сформированной
+    пары пользователей генерирует уникальное уведомление о встрече
+    и отправляет его соответствующему пользователю. В случае, если
+    уведомление одному из пользователей не может быть доставлено,
+    отправляет сообщение другому пользователю пары с просьбой связаться
+    со своим партнером самостоятельно.
+    """
     meeting_list = await generate_unique_pairs()
-    data_mailing = await create_data_for_mailing(meeting_list)
-    for user, message in data_mailing:
-        await send_message(user, message)
+
+    for meeting in meeting_list:
+        message = await create_message_for_mailing(meeting)
+
+        if not await send_message(meeting.user, message):
+            FAIL_MESSAGE = (
+                'К сожалению, мы не смогли доставить уведомление вашему '
+                f'партнеру по кофе (<b>{meeting.user.enter_full_name}</b>), '
+                'попробуйте связаться самостоятельно.'
+            )
+            await send_message(meeting.partner, FAIL_MESSAGE)

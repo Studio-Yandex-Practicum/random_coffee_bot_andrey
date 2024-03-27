@@ -9,7 +9,7 @@ from tg_bot.db.db_commands import (get_unblocked_users, get_unsent_mailings,
 from tg_bot.loader import bot
 
 
-async def send_message(user: TgUser, text: str) -> None:
+async def send_message(user: TgUser, text: str):
     """
     Отправляет сообщение указанному пользователю Telegram.
 
@@ -18,7 +18,7 @@ async def send_message(user: TgUser, text: str) -> None:
     - text: Текст сообщения.
     """
     try:
-        await bot.send_message(user.id, text)
+        return await bot.send_message(user.id, text)
     except exceptions.TelegramForbiddenError as e:
         if e.message == 'Forbidden: bot was blocked by the user':
             logging.info(f'Пользователь {user.id} заблокировал бота')
