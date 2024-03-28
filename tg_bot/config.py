@@ -1,21 +1,22 @@
-from environs import Env
+import os
+import logging
 
-from tg_bot.logs.logs_setup import loggers
+from dotenv import load_dotenv
 
+load_dotenv()
 
-env = Env()
-env.read_env()
+"""Logging levels"""
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 """Tokens"""
-BOT_TOKEN = env.str('BOT_TOKEN')
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 
-"""Loggers"""
-bot_logger = loggers['BotLogger']
+"""Domain"""
+HOST_IP = os.getenv('HOST_IP')
+ALLOWED_DOMAIN = os.getenv('ALLOWED_DOMAIN')
 
-"""Redis"""
-redis_host = env.str('REDIS_HOST', None)
-redis_port = env.str('REDIS_PORT', None)
+logging.basicConfig(level=logging.DEBUG if DEBUG else logging.INFO)
 
-"""Django"""
-super_user_name = env.str('SUPER_USER_NAME')
-super_user_pass = env.str('SUPER_USER_PASS')
+"""Настройки для рассылки"""
+MEETING_DAY: str = 'mon'  # дни недели: mon,tue,wed,thu,fri,sat,sun
+MEETING_TIME: int = 12

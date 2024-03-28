@@ -1,11 +1,11 @@
 import os
-
 import django
+
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import RedisStorage, Redis
 
-from tg_bot.config import BOT_TOKEN, redis_host, redis_port, bot_logger
+from tg_bot.config import BOT_TOKEN, DEBUG
 
 
 def setup_django():
@@ -18,18 +18,18 @@ def setup_django():
 
 
 def include_all_routers():
-    from tg_bot.handlers.default import default_router
-    dp.include_router(default_router)
+    """ Добавление роутеров. """
+    from tg_bot.handlers import all_routers
+    dp.include_routers(*all_routers)
 
 
-bot_logger.info("Logger initialized")
 setup_django()
-bot = Bot(BOT_TOKEN, parse_mode='HTML')
+bot = Bot(token=BOT_TOKEN, parse_mode='HTML')
 
-if redis_host and redis_port:
-    storage = RedisStorage(Redis(host=redis_host, port=redis_port))
-else:
+if DEBUG:
     storage = MemoryStorage()
+else:
+    storage = RedisStorage(Redis(host='redis'))
 
 dp = Dispatcher(storage=storage)
 include_all_routers()
