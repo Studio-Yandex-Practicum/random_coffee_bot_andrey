@@ -2,9 +2,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from admin_panel.telegram.models import TgUser
 from tg_bot.keyboards.callback_data import (
-    BlockUserCallback,
-    ParticipationCallback,
-)
+    BlockUserCallback, ParticipationCallback, QuestionCallback,)
 
 
 def kb_block_unblock_user(tg_user: TgUser):
@@ -43,4 +41,14 @@ def kb_yes_or_no():
         text='Нет',
         callback_data=ParticipationCallback(is_active=False),
     )
+    return builder.as_markup()
+
+
+def question_about_meeting():
+    builder = InlineKeyboardBuilder()
+    for text in ('Да', 'Нет', 'Встретимся в конце недели'):
+        builder.button(
+            text=text,
+            callback_data=QuestionCallback(answer=text),
+        )
     return builder.as_markup()

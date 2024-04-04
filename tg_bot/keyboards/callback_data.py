@@ -8,3 +8,7 @@ class BlockUserCallback(CallbackData, prefix='blocked'):
 
 class ParticipationCallback(CallbackData, prefix='participation'):
     is_active: bool  # активация пользователя в программе
+
+
+class QuestionCallback(CallbackData, prefix='question'):
+    answer: str  # ответ

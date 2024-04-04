@@ -5,7 +5,8 @@ from aiogram.types.input_file import FSInputFile
 
 from admin_panel.telegram.models import TgUser
 from tg_bot.db.db_commands import get_tg_user, save_model
-from tg_bot.keyboards.callback_data import ParticipationCallback
+from tg_bot.keyboards.callback_data import (
+    ParticipationCallback, QuestionCallback)
 from tg_bot.keyboards.inline import kb_yes_or_no
 from tg_bot.middlewares.blocking import BlockingMiddleware
 from tg_bot.keyboards.reply import kb_main_menu
@@ -124,3 +125,10 @@ async def about_project(message: Message):
 async def reviews(message: Message):
     """Сообщение о проекте."""
     await message.answer(MSG_REVIEW)
+
+
+@main_menu_router.callback_query(QuestionCallback.filter())
+async def answer_for_question(callback: CallbackQuery):
+    """Ответ на вопрос о проведенной встрече"""
+    await delete_message(message=callback.message, sleep_time=0)
+    await callback.message.answer('Спасибо за ответ')

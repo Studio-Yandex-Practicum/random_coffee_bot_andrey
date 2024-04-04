@@ -93,3 +93,13 @@ def get_unsent_mailings():
         date_mailing__lte=timezone.now(),
         is_sent=False,
     )
+
+
+@sync_to_async
+def get_users_meetings_this_week():
+    """Получение пользователей, которые провели встречи на этой неделе"""
+    # Получение встреч на текущей неделе
+    meetings_on_week = Meeting.objects.filter(
+        date__gte=timezone.now() - timedelta(days=8)
+    ).values_list('user', flat=True).distinct()
+    return TgUser.objects.filter(id__in=meetings_on_week)
