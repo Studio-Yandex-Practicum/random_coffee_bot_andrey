@@ -100,6 +100,6 @@ def get_users_meetings_this_week():
     """Получение пользователей, которые провели встречи на этой неделе"""
     # Получение встреч на текущей неделе
     meetings_on_week = Meeting.objects.filter(
-        date__gte=timezone.now() - timedelta(days=8)
+        date__gte=timezone.now() - timedelta(days=7)
     ).values_list('user', flat=True).distinct()
     return TgUser.objects.filter(id__in=meetings_on_week)
