@@ -51,4 +51,5 @@ def question_about_meeting():
             text=text,
             callback_data=QuestionCallback(answer=text),
         )
+    builder.adjust(2)
     return builder.as_markup()

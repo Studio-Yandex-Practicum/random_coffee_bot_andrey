@@ -1,6 +1,5 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
-from aiogram.types.input_file import FSInputFile
 
 
 from admin_panel.telegram.models import TgUser
@@ -73,8 +72,8 @@ ABOUT_TEXT = '''
 async def main_menu(message: Message):
     """Главное меню"""
     tg_user = await get_tg_user(message.from_user.id)
-    await message.answer_photo(
-        photo=FSInputFile('logo.jpg'), caption=GREETING_TEXT,
+    await message.answer(
+        GREETING_TEXT,
         reply_markup=kb_main_menu(include_resume_button=tg_user.is_active)
     )
 
